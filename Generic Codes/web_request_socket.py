@@ -167,6 +167,7 @@ def RequestObjectsToHTTPPipeline(RequestObjects):
              #CRLF + "connection: close" + CRLF + CRLF
     return result
 
+# TEST CODE #
 def HTTPPipelineTest():
     result = False
     testReq1 = RequestObject('OPTIONS', 'https://0me.me/calc.php?a=2222&b=2','',
@@ -185,7 +186,6 @@ def HTTPPipelineTest():
 
     try:
         reqResult = SendHTTPRequestBySocket(pipelineResult, testReq1.targetName, testReq1.targetPort, testReq1.isSSL, 20)
-        #reqResult = SendHTTPRequestBySocket(pipelineResult, 'localhost', 8081, False, 5)
     except:
         reqResult = ''
     #print reqResult
@@ -193,5 +193,15 @@ def HTTPPipelineTest():
         result = True
     return result
 
+def AnotherPipelineExample():
+    req1 = RequestObject('GET', 'http://asitename.com:8080/sum.jsp?a=1&b=1&c=2&d=2')
+    req2 = RequestObject('POST', 'http://asitename.com:8080/sum.jsp?a=3&b=3', 'c=4&d=4',
+                         {'Content-Type': 'application/x-www-form-urlencoded'}, autoContentLength=True,
+                         HTTPVersion="HTTP/1.0")
+    req3 = RequestObject('POST', 'http://asitename.com:8080/sum.jsp?a=5&b=5', 'c=6&d=6',
+                         {'Content-Type': 'application/x-www-form-urlencoded'}, autoContentLength=True)
+    joinedReqs = [req1, req2, req3]
+    pipelineResult = RequestObjectsToHTTPPipeline(joinedReqs)
+    print SendHTTPRequestBySocket(pipelineResult, req1.targetName, req1.targetPort)
 
 
