@@ -26,7 +26,7 @@ class RequestObject(object):
     targetPort = ''
     targetProtocol = ''
     # The class "constructor" - It's actually an initializer
-    def __init__(self, method='GET', url='', body='', headers=None, autoContentLength=True, autoHOSTHeader=True, useAbsolutePath=False, HTTPVersion='HTTP/1.1'):
+    def __init__(self, method='GET', url='', body='', headers={}, autoContentLength=True, autoHOSTHeader=True, useAbsolutePath=False, HTTPVersion='HTTP/1.1'):
         self.method = method
         self.url = url
         self.body = body
@@ -54,7 +54,7 @@ class RequestObject(object):
             self.body = urllib.urlencode(self.body)
 
         # set other necessary parameters
-        self.targetName = parsedURL.netloc
+        self.targetName = parsedURL.hostname
         self.targetPort = parsedURL.port
         self.targetProtocol = (parsedURL.scheme).lower()
         if self.targetProtocol == 'https':
@@ -73,7 +73,7 @@ class RequestObject(object):
         incomingHeaders = ''
         if self.autoHOSTHeader:
             hostHeader = self._CRLF + "Host: " + self.targetName + self._CRLF
-        if self.headers != None:
+        if self.headers != None and len(self.headers)>0:
             for key, value in self.headers.iteritems():
                 incomingHeaders = incomingHeaders + str(key) + ": " + str(value) + self._CRLF
         if incomingHeaders.endswith(self._CRLF):
